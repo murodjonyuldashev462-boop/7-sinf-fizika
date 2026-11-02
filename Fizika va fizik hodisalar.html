@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fizika va fizik hodisalar</title>
+<style>
+:root{--bg:#f2f6f5;--pn:#fff;--tx:#14323f;--mu:#56717a;--ac:#0f7d7a;--am:#f2a900;--ln:#d3e0df;--ok:#1d8a4a;--no:#c23b3b;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d181d;--pn:#16262c;--tx:#e5f0ee;--mu:#93aab1;--ac:#46c2bd;--ln:#2a3f46;--ok:#4ac17c;--no:#ef7b7b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d181d;--pn:#16262c;--tx:#e5f0ee;--mu:#93aab1;--ac:#46c2bd;--ln:#2a3f46;--ok:#4ac17c;--no:#ef7b7b;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 "Trebuchet MS",system-ui,sans-serif}
+main{max-width:640px;margin:0 auto;padding:12px 14px 40px}
+h1{font-size:1.45rem;margin:6px 0 2px;line-height:1.2}
+h2{font-size:1.2rem;margin:8px 0 4px}
+p{margin:4px 0 10px;color:var(--mu)}
+nav{display:flex;gap:6px;overflow-x:auto;padding:8px 0;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5}
+.chip,.btn{font:inherit;border:1.5px solid var(--ln);background:var(--pn);color:var(--tx);border-radius:999px;padding:7px 14px;white-space:nowrap;cursor:pointer}
+.chip.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.btn{background:var(--am);border-color:var(--am);color:#14323f;font-weight:700;border-radius:12px;padding:11px 18px}
+.btn.sec{background:var(--pn);border-color:var(--ac);color:var(--ac)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--am);outline-offset:2px}
+.card{background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:12px}
+canvas{display:block;width:100%;aspect-ratio:360/260;background:#e9f3f4;border-radius:12px}
+.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:10px 0}
+.g3 canvas{aspect-ratio:3/2}
+.g3 b{display:block;margin-top:6px}
+.g3 span{font-size:.9rem;color:var(--mu)}
+label{display:block;margin:10px 0 0}
+input[type=range]{width:100%;accent-color:var(--ac);height:32px}
+#info{margin:10px 0;padding:9px 12px;border-left:4px solid var(--am);background:var(--pn);border-radius:6px;min-height:3.4em}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.big{font-size:1.3rem;font-weight:700;margin:10px 0}
+.opt{display:block;width:100%;text-align:left;margin:7px 0;border-radius:12px}
+.fb{margin:10px 0;padding:10px 12px;border-radius:10px;background:var(--pn);border:1px solid var(--ln)}
+.bar{height:6px;background:var(--ln);border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ac)}
+.ok{color:var(--ok)}.no{color:var(--no)}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<main>
+<h1>Fizika va fizik hodisalar</h1>
+<nav id="nav"></nav>
+
+<section id="p-intro">
+<h2>Fizika nimani oʻrganadi?</h2>
+<p>Fizika tabiatda, texnikada va kundalik hayotda sodir boʻladigan oʻzgarishlarni — harakat, qizish, yorugʻlik, tovush, elektr va magnit hodisalarini oʻrganadi. Bunday oʻzgarishlar <b>fizik hodisalar</b> deyiladi. Quyidagi uch rasmni kuzating.</p>
+<div class="g3">
+<div class="card"><canvas width="300" height="200"></canvas><b>Tabiat: yomgʻir</b><span>Bulutdan tomchilar yerga tushadi.</span></div>
+<div class="card"><canvas width="300" height="200"></canvas><b>Texnika: mashina</b><span>Mashina yoʻl boʻylab harakatlanadi.</span></div>
+<div class="card"><canvas width="300" height="200"></canvas><b>Kundalik hayot: choynak</b><span>Suv qaynab, bugʻ chiqadi.</span></div>
+</div>
+<p>Savol: bu rasmlarda nima oʻzgaryapti? Hodisalarning 5 turini oʻzingiz tajriba qilib koʻring.</p>
+<button class="btn" onclick="show('mex')">Tajribalarni boshlash</button>
+</section>
+
+<section id="p-sim" hidden>
+<h2 id="t"></h2>
+<p id="d"></p>
+<div class="row" id="modes"></div>
+<canvas id="cv" width="720" height="520" aria-label="Simulyatsiya oynasi"></canvas>
+<div id="sl"></div>
+<div class="row"><button class="btn" id="go"></button></div>
+<div id="info"></div>
+</section>
+
+<section id="p-game" hidden>
+<h2>Fizik yoki kimyoviy hodisa?</h2>
+<p>Fizik hodisada yangi modda hosil boʻlmaydi. Kimyoviy hodisada yangi moddalar paydo boʻladi.</p>
+<div id="game" class="card"></div>
+</section>
+
+<section id="p-test" hidden>
+<h2>Bilimni tekshirish</h2>
+<div id="test" class="card"></div>
+</section>
+</main>
+
+<script>
+const $=q=>document.querySelector(q),W=360,H=260,PI=Math.PI;
+let g,cur="intro",T=0,P=0,run=false,mode=0,V={},last=0;
+const cv=$("#cv");
+const circ=(x,y,r,c)=>{g.fillStyle=c;g.beginPath();g.arc(x,y,r,0,7);g.fill()};
+const line=(a,b,c,d,col="#14323f",w=2)=>{g.strokeStyle=col;g.lineWidth=w;g.beginPath();g.moveTo(a,b);g.lineTo(c,d);g.stroke()};
+const txt=(s,x,y,col="#14323f",sz=13,al="left")=>{g.fillStyle=col;g.font="bold "+sz+"px Trebuchet MS,sans-serif";g.textAlign=al;g.fillText(s,x,y)};
+const poly=(pts,col)=>{g.fillStyle=col;g.beginPath();pts.forEach((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.closePath();g.fill()};
+const clipX=w=>{g.save();g.beginPath();g.rect(0,0,w,H);g.clip()};
+const Q={ice:1,T:0};
+
+/* ---- Bosh ekran animatsiyalari (150x100) ---- */
+const IN=[...document.querySelectorAll("#p-intro canvas")];
+const INF=[
+t=>{circ(45,22,14,"#9fb4ba");circ(65,18,18,"#9fb4ba");circ(88,24,13,"#9fb4ba");
+ for(let i=0;i<9;i++){const y=(t*70+i*23)%80+34;line(40+i*9,y,40+i*9,y+7,"#2d7fd3",2)}
+ line(0,98,150,98,"#4b9a58",3)},
+t=>{const x=((t*45)%190)-30;line(0,80,150,80,"#6b7f86",3);
+ g.fillStyle="#0f7d7a";g.fillRect(x,56,44,16);g.fillRect(x+10,45,24,13);
+ [8,34].forEach(o=>{circ(x+o,74,7,"#14323f");circ(x+o,74,2,"#fff");line(x+o,74,x+o+Math.cos(t*14)*6,74+Math.sin(t*14)*6,"#fff",1.5)})},
+t=>{g.fillStyle="#f2a900";g.fillRect(45,45,50,36);g.fillRect(95,52,14,5);poly([[45,45],[70,28],[95,45]],"#c98a00");
+ for(let i=0;i<3;i++){g.strokeStyle="#7d97a0";g.lineWidth=2;g.beginPath();for(let y=0;y<30;y++){const px=62+i*12+Math.sin(y*.5+t*5+i)*3;y?g.lineTo(px,26-y*.8):g.moveTo(px,26)}g.stroke()}}
+];
+
+/* ---- Bo‘limlar ---- */
+const SEC={
+mex:{t:"Mexanik hodisalar",d:"Jismning vaziyati vaqt oʻtishi bilan oʻzgaradi: yuk pastga tushadi, shar dumalaydi. Balandlik va tezlikni tanlab, “Ishga tushirish”ni bosing.",
+ sl:[[{k:"h",l:"Yukning balandligi",min:1,max:10,v:5,u:" m"},{k:"v",l:"Sharning tezligi",min:1,max:10,v:4,u:" m/s"}]],go:["Ishga tushirish"],
+ draw(){const gy=230,hp=V.h*18,tf=Math.sqrt(2*V.h/9.8),f=Math.min(T,tf)/tf;
+  g.fillStyle="#bcd0d4";g.fillRect(0,gy,W,30);
+  line(40,gy,40,gy-hp,"#56717a",2);txt(V.h+" m",34,gy-hp/2,"#56717a",12,"right");
+  g.fillStyle="#0f7d7a";g.fillRect(56,gy-hp+hp*f*f-26,26,26);
+  const px=Math.min(V.v*T*14,150);circ(176+px,gy-12,12,"#f2a900");
+  const a=px/12;line(176+px,gy-12,176+px+Math.cos(a)*12,gy-12+Math.sin(a)*12,"#14323f",2);line(176+px,gy-12,176+px-Math.cos(a)*12,gy-12-Math.sin(a)*12,"#14323f",2)},
+ info(){const tf=Math.sqrt(2*V.h/9.8);return `Yuk ${V.h} m balandlikdan taxminan ${tf.toFixed(2)} s da tushadi. Balandlik oshsa, tushish vaqti ham oshadi. Shar ${Math.min(V.v*T,10.7).toFixed(1)} m yurdi.`}},
+
+iss:{t:"Issiqlik hodisalari",d:"Muz erishi, suvning qizishi va qaynashi — issiqlik hodisalari. Olov kuchini oʻzgartirib, jarayon tezligini solishtiring.",
+ sl:[[{k:"w",l:"Olov kuchi",min:1,max:5,v:2,u:""}]],go:["Qizdirishni boshlash"],
+ reset(){Q.ice=1;Q.T=0},
+ upd(dt){if(Q.ice>0){Q.ice=Math.max(0,Q.ice-.12*V.w*dt);Q.T=0}else if(Q.T<100)Q.T=Math.min(100,Q.T+14*V.w*dt)},
+ draw(){const hue=205-Q.T*.25;
+  if(run){const s=6+V.w*5+Math.sin(T*18)*2;poly([[160,238],[180,238-s*2.2],[200,238]],"#f2a900");poly([[170,238],[180,238-s*1.2],[190,238]],"#e0502a")}
+  g.fillStyle=`hsla(${hue},70%,58%,.7)`;g.fillRect(112,130,136,78);
+  if(Q.ice>0){const s=34*Math.sqrt(Q.ice);g.fillStyle="rgba(190,235,250,.95)";g.fillRect(180-s/2,132-s*.6,s,s)}
+  g.strokeStyle="#14323f";g.lineWidth=3;g.beginPath();g.moveTo(110,80);g.lineTo(110,210);g.lineTo(250,210);g.lineTo(250,80);g.stroke();
+  if(Q.T>=100)for(let i=0;i<10;i++){circ(122+((i*37)%110),205-((T*45+i*23)%75),2+i%3,"rgba(255,255,255,.8)")}
+  if(Q.T>=100)for(let i=0;i<3;i++){g.strokeStyle="#7d97a0";g.lineWidth=2;g.beginPath();for(let y=0;y<40;y++){const px=140+i*30+Math.sin(y*.4+T*5+i)*4;y?g.lineTo(px,126-y):g.moveTo(px,126)}g.stroke()}
+  txt(Math.round(Q.T)+" °C",300,110,"#14323f",22,"center")},
+ info(){return !run?"Stakanda 0 °C li muz bor. Qizdirishni boshlang.":Q.ice>0?"Muz erimoqda. Muz erib boʻlguncha harorat 0 °C da turadi.":Q.T<100?"Suv qizimoqda: harorat koʻtarilmoqda.":"Suv qaynayapti! Harorat 100 °C da turadi, suv bugʻga aylanmoqda."}},
+
+yor:{t:"Yorugʻlik hodisalari",d:"Yorugʻlik toʻgʻri chiziq boʻylab tarqaladi. Uch hodisadan birini tanlang.",modes:["Soya","Kamalak","Qaytish"],
+ sl:[[{k:"d",l:"Jism va lampa orasidagi masofa",min:50,max:230,v:120,u:""}],[{k:"sp",l:"Prizmaning nurni ajratishi",min:10,max:30,v:20,u:"°"}],[{k:"a",l:"Tushish burchagi",min:10,max:80,v:40,u:"°"}]],
+ go:["Nurni yoqish","Oq nurni yuborish","Nurni yuborish"],
+ draw(){
+  if(mode==0){const lx=36,ox=lx+V.d,sx=330,k=(sx-lx)/(V.d),sh=Math.min(16*k,88);
+   circ(lx,130,9,"#f2a900");g.fillStyle="#9fb4ba";g.fillRect(sx,40,6,180);
+   clipX(lx+(sx-lx)*P);poly([[lx,130],[sx,20],[sx,240]],"rgba(242,169,0,.2)");
+   poly([[ox,114],[sx,130-sh],[sx,130+sh],[ox,146]],"rgba(20,50,63,.55)");g.fillStyle="#14323f";g.fillRect(sx,130-sh,6,sh*2);g.restore();
+   circ(ox,130,16,"#0f7d7a")}
+  else if(mode==1){poly([[160,50],[100,190],[220,190]],"rgba(120,190,220,.45)");
+   clipX(20+325*P);line(20,130,126,130,"#fff",3);line(126,130,194,130,"#fff",3);
+   ["#e53935","#fb8c00","#fdd835","#43a047","#1e88e5","#3949ab","#8e24aa"].forEach((c,i)=>{const a=(8+i*V.sp/6)*PI/180;line(194,130,345,130+Math.tan(a)*151,c,3)});g.restore();
+   g.strokeStyle="#14323f";g.lineWidth=2.5;g.beginPath();g.moveTo(160,50);g.lineTo(100,190);g.lineTo(220,190);g.closePath();g.stroke()}
+  else{const a=V.a*PI/180,L=140,s=Math.sin(a),c=Math.cos(a);
+   g.fillStyle="#7d97a0";g.fillRect(60,200,240,8);g.setLineDash([5,4]);line(180,200,180,50,"#56717a",1.5);g.setLineDash([]);
+   const f1=Math.min(1,P*2),f2=Math.max(0,P*2-1);
+   line(180-L*s,200-L*c,180-L*s+L*s*f1,200-L*c+L*c*f1,"#f2a900",3);
+   line(180,200,180+L*s*f2,200-L*c*f2,"#e0502a",3);
+   if(P>.5){txt("α = "+V.a+"°",80,60,"#14323f",14);txt("β = "+V.a+"°",280,60,"#14323f",14,"right")}}},
+ info(){return mode==0?`Jism lampaga yaqinlashsa soyasi katta boʻladi. Hozir soya jismdan ${(294/V.d).toFixed(1)} marta katta.`:mode==1?"Oq yorugʻlik prizmada 7 rangga ajraladi: qizil, zarg‘aldoq, sariq, yashil, moviy, koʻk, binafsha.":"Qaytish qonuni: tushish burchagi qaytish burchagiga teng (α = β)."}},
+
+tov:{t:"Tovush hodisalari",d:"Tovush jismlarning tebranishidan hosil boʻladi. Tor tebranadi, havo zarralari esa tovush toʻlqinini uzatadi.",
+ sl:[[{k:"f",l:"Tebranish tezligi (sekinlashtirilgan)",min:1,max:6,v:2,u:""},{k:"A",l:"Tebranish amplitudasi",min:3,max:20,v:12,u:""}]],go:["Torni tebratish"],
+ draw(){const a=T>0?V.A:0;g.beginPath();g.strokeStyle="#14323f";g.lineWidth=3;
+  for(let x=40;x<=320;x+=4){const y=70+a*Math.sin(PI*(x-40)/280)*Math.sin(2*PI*V.f*T);x==40?g.moveTo(x,y):g.lineTo(x,y)}g.stroke();
+  circ(40,70,5,"#f2a900");circ(320,70,5,"#f2a900");txt("tor",180,36,"#56717a",12,"center");txt("havo zarralari",180,110,"#56717a",12,"center");
+  for(let r=0;r<5;r++)for(let i=0;i<34;i++){const bx=20+i*10,dx=(a/20)*6*Math.sin(bx*.03*V.f-2*PI*V.f*T);circ(bx+dx,135+r*24,2.4,"#0f7d7a")}},
+ info(){return T<=0?"Torni tebratib, zarralar harakatini kuzating.":"Amplituda katta boʻlsa — tovush baland. Tebranish tezligi oshsa, toʻlqin uzunligi qisqaradi va tovush ingichka boʻladi."}},
+
+el:{t:"Elektr va magnit hodisalari",d:"Ishqalangan jism elektrlanadi. Magnit esa temirni tortadi. Ikkala tajribani sinab koʻring.",modes:["Elektrlanish","Magnit"],
+ sl:[[{k:"n",l:"Ishqalash soni",min:0,max:10,v:6,u:""}],[{k:"s",l:"Magnit kuchi",min:1,max:10,v:4,u:""}]],go:["Choʻtka bilan ishqalash","Temir qirindisini sepish"],
+ draw(){
+  if(mode==0){const q=V.n/10*P;g.fillStyle="#bcd0d4";g.fillRect(90,220,200,10);
+   if(P<1&&T>0){const bx=70+Math.sin(T*12)*8;g.fillStyle="#8d6e63";g.fillRect(bx-26,62,34,36);line(bx-26,98,bx-26,110,"#8d6e63",2)}
+   circ(190,82,26,"#1e88e5");for(let i=0;i<Math.round(q*10);i++){const a=i*PI*2/10;txt("+",190+Math.cos(a)*38,86+Math.sin(a)*38,"#e53935",15,"center")}
+   for(let i=0;i<8;i++){const x0=120+i*22,x=x0+(190-x0)*q*.35,lift=q>0?Math.min(112,q*135*(.6+.4*Math.sin(i*1.7+T*6))):0;g.save();g.translate(x,214-lift);g.rotate(Math.sin(i+T*4)*q*.8);g.fillStyle="#f2a900";g.fillRect(-6,-2,12,4);g.restore()}}
+  else{const s=V.s;for(let x=20;x<=340;x+=20)for(let y=30;y<=240;y+=20){const dx=x-180,dy=y-130;if(Math.abs(dx)<48&&Math.abs(dy)<22)continue;
+   const r=Math.hypot(dx,dy),m=dx/r,bx=(3*m*dx/r-1)/r**3,by=3*m*dy/r/r**3,a=Math.atan2(by,bx);
+   g.globalAlpha=Math.min(1,Math.pow(s*60/r,3))*P;line(x-Math.cos(a)*7,y-Math.sin(a)*7,x+Math.cos(a)*7,y+Math.sin(a)*7,"#14323f",2)}
+   g.globalAlpha=1;g.fillStyle="#1e88e5";g.fillRect(140,116,40,28);g.fillStyle="#e53935";g.fillRect(180,116,40,28);txt("S",160,136,"#fff",14,"center");txt("N",200,136,"#fff",14,"center")}},
+ info(){return mode==0?"Ishqalangan shar elektrlanib, yengil qogʻoz parchalarini oʻziga tortadi. Koʻproq ishqalasangiz, zaryad koʻp boʻladi.":"Temir qirindilari magnit qutblari atrofida chiziqlar hosil qiladi. Magnitga yaqin joyda taʼsir kuchliroq."}}
+};
+
+function buildSec(){const s=SEC[cur];T=0;run=false;if(s.reset)s.reset();
+ $("#t").textContent=s.t;$("#d").textContent=s.d;
+ $("#modes").innerHTML=(s.modes||[]).map((m,i)=>`<button class="chip ${i==mode?"on":""}" onclick="mode=${i};buildSec()">${m}</button>`).join("");
+ const sl=s.sl[mode]||s.sl[0];
+ $("#sl").innerHTML=sl.map(o=>{V[o.k]=o.v;return `<label>${o.l}: <b id="o${o.k}">${o.v}${o.u}</b><input type="range" min="${o.min}" max="${o.max}" value="${o.v}" oninput="V.${o.k}=+this.value;$('#o${o.k}').textContent=this.value+'${o.u}'"></label>`}).join("");
+ $("#go").textContent=s.go[mode]||s.go[0]}
+$("#go").onclick=()=>{T=0;run=true;const s=SEC[cur];if(s.reset)s.reset()};
+
+/* ---- Navigatsiya ---- */
+const TABS=[["intro","Boshlanish"],["mex","Mexanik"],["iss","Issiqlik"],["yor","Yorugʻlik"],["tov","Tovush"],["el","Elektr-magnit"],["game","Oʻyin"],["test","Test"]];
+$("#nav").innerHTML=TABS.map(t=>`<button class="chip" data-id="${t[0]}" onclick="show('${t[0]}')">${t[1]}</button>`).join("");
+function show(id){cur=id;mode=0;
+ ["intro","sim","game","test"].forEach(p=>$("#p-"+p).hidden=true);
+ $("#p-"+(SEC[id]?"sim":id)).hidden=false;
+ document.querySelectorAll("#nav .chip").forEach(b=>b.classList.toggle("on",b.dataset.id==id));
+ if(SEC[id])buildSec();if(id=="game"){gi=0;gs=0;gameR()}if(id=="test"){ti=0;tsc=0;wrong=[];testR()}
+ window.scrollTo(0,0)}
+
+function loop(ts){const dt=Math.min(.05,(ts-last)/1000||0);last=ts;
+ if(cur=="intro")IN.forEach((c,i)=>{g=c.getContext("2d");g.setTransform(2,0,0,2,0,0);g.clearRect(0,0,150,100);INF[i](ts/1000)});
+ else if(SEC[cur]){const s=SEC[cur];if(run)T+=dt;P=T>0?Math.min(1,T/1.5):0;if(s.upd&&run)s.upd(dt);
+  g=cv.getContext("2d");g.setTransform(2,0,0,2,0,0);g.clearRect(0,0,W,H);s.draw();$("#info").textContent=s.info()}
+ requestAnimationFrame(loop)}
+
+/* ---- Mini-o‘yin ---- */
+const GM=[["Muzning erishi","f","Muz suvga aylanadi, lekin moddasi oʻsha-oʻsha (H₂O). Yangi modda hosil boʻlmadi."],
+["Qogʻozning yonishi","k","Qogʻoz kul va tutunga aylanadi — yangi moddalar hosil boʻldi."],
+["Temirning zanglashi","k","Temir havo va namlik bilan birikib, zang (yangi modda) hosil qiladi."],
+["Suvning bugʻlanishi","f","Suv bugʻga aylanadi, ammo bugʻ ham suvning oʻzi — faqat holati oʻzgargan."],
+["Sutning achishi","k","Sutda yangi moddalar (sut kislotasi) hosil boʻladi."],
+["Shakarning suvda erishi","f","Shakar suvda tarqaladi, lekin shakarligicha qoladi."],
+["Yashin chaqnashi","f","Bu elektr va yorugʻlik hodisasi. Yangi modda hosil boʻlmaydi."],
+["Kesilgan olmaning qorayishi","k","Olma havo bilan taʼsirlashib, yangi moddalar hosil qiladi."],
+["Lampochka spiralining choʻgʻlanishi","f","Spiral elektr toki taʼsirida qiziydi va yorugʻlik beradi. Modda oʻzgarmaydi."],
+["Tuxumning pishishi","k","Qizdirilganda tuxumdagi moddalar oʻzgaradi, qaytib xom boʻlmaydi."]];
+let gi=0,gs=0,gans=false;
+function gameR(){gans=false;const el=$("#game");
+ if(gi>=10){el.innerHTML=`<div class="big">Natija: ${gs} / 10</div><p>${gs>=8?"Zoʻr! Hodisalarni yaxshi ajratasiz.":"Xatolarni qayta koʻrib chiqing va yana urinib koʻring."}</p><button class="btn" onclick="gi=0;gs=0;gameR()">Qayta oʻynash</button>`;return}
+ el.innerHTML=`<div class="bar"><i style="width:${gi*10}%"></i></div><p>Misol ${gi+1} / 10</p><div class="big">${GM[gi][0]}</div><div class="row"><button class="btn sec" onclick="gAns('f')">Fizik</button><button class="btn sec" onclick="gAns('k')">Kimyoviy</button></div><div id="gfb"></div>`}
+function gAns(a){if(gans)return;gans=true;const m=GM[gi],ok=a==m[1];if(ok)gs++;
+ $("#gfb").innerHTML=`<div class="fb"><b class="${ok?"ok":"no"}">${ok?"Toʻgʻri!":"Notoʻgʻri."}</b> Bu ${m[1]=="f"?"fizik":"kimyoviy"} hodisa. ${m[2]}</div><button class="btn" onclick="gi++;gameR()">${gi<9?"Keyingisi":"Natijani koʻrish"}</button>`}
+
+/* ---- Test ---- */
+const TS=[["Quyidagilardan qaysi biri fizik hodisa?",["Temirning zanglashi","Yogʻochning yonishi","Muzning erishi","Sutning achishi"],2,"Muz erishida modda oʻzgarmaydi, faqat holati oʻzgaradi."],
+["Soyaning hosil boʻlishi qaysi hodisaga kiradi?",["Yorugʻlik hodisasi","Tovush hodisasi","Mexanik hodisa","Magnit hodisasi"],0,"Yorugʻlik toʻgʻri chiziq boʻylab tarqaladi, jism yoʻlini toʻssa soya hosil boʻladi."],
+["Tebranayotgan tor nimani hosil qiladi?",["Issiqlik","Tovush","Soya","Magnit"],1,"Jismning tebranishi tovush hosil qiladi."],
+["Suv oddiy sharoitda necha °C da qaynaydi?",["50 °C","0 °C","100 °C","200 °C"],2,"Suv qaynaganda harorati 100 °C da turadi."],
+["Ishqalanib elektrlangan shar nimani tortadi?",["Faqat temirni","Yengil qogʻoz parchalarini","Hech narsani","Faqat suvni"],1,"Elektrlangan jism yengil jismlarni oʻziga tortadi."]];
+let ti=0,tsc=0,wrong=[],tans=false;
+function testR(){tans=false;const el=$("#test");
+ if(ti>=5){el.innerHTML=`<div class="big">Natija: ${tsc} / 5</div>${wrong.length?"<p><b>Xatolar tahlili:</b></p>"+wrong.map(w=>`<div class="fb"><b>${w[0]}</b><br><span class="no">Sizning javobingiz: ${w[1]}</span><br><span class="ok">Toʻgʻri javob: ${w[2]}</span><br>${w[3]}</div>`).join(""):"<p class='ok'>Hammasi toʻgʻri! Barakalla!</p>"}<button class="btn" onclick="show('test')">Testni qayta ishlash</button>`;return}
+ const q=TS[ti];el.innerHTML=`<div class="bar"><i style="width:${ti*20}%"></i></div><p>Savol ${ti+1} / 5</p><div class="big">${q[0]}</div>${q[1].map((o,i)=>`<button class="btn sec opt" onclick="tAns(${i})">${o}</button>`).join("")}`}
+function tAns(i){if(tans)return;tans=true;const q=TS[ti];if(i==q[2])tsc++;else wrong.push([q[0],q[1][i],q[1][q[2]],q[3]]);ti++;testR()}
+
+show("intro");requestAnimationFrame(loop);
+</script>
+</body>
+</html>
